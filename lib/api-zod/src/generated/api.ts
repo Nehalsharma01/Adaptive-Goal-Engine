@@ -26,6 +26,7 @@ export const GetProfileResponse = zod.object({
   "habits": zod.array(zod.string()),
   "ambitions": zod.array(zod.string()),
   "motivationStyle": zod.string(),
+  "culturalBackground": zod.string().optional().describe('Cultural\/regional background for personalised coaching (e.g. \"india\", \"general\")'),
   "onboardingComplete": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
@@ -41,6 +42,7 @@ export const UpsertProfileBody = zod.object({
   "habits": zod.array(zod.string()).optional(),
   "ambitions": zod.array(zod.string()).optional(),
   "motivationStyle": zod.string().optional(),
+  "culturalBackground": zod.string().optional().describe('Cultural\/regional background for personalised coaching'),
   "onboardingComplete": zod.boolean().optional()
 })
 
@@ -51,6 +53,7 @@ export const UpsertProfileResponse = zod.object({
   "habits": zod.array(zod.string()),
   "ambitions": zod.array(zod.string()),
   "motivationStyle": zod.string(),
+  "culturalBackground": zod.string().optional().describe('Cultural\/regional background for personalised coaching (e.g. \"india\", \"general\")'),
   "onboardingComplete": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()

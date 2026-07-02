@@ -458,6 +458,9 @@ components:
             type: string
         motivationStyle:
           type: string
+        culturalBackground:
+          type: string
+          description: Cultural/regional background for personalised coaching (e.g. "india", "general")
         onboardingComplete:
           type: boolean
         createdAt:
@@ -496,6 +499,9 @@ components:
             type: string
         motivationStyle:
           type: string
+        culturalBackground:
+          type: string
+          description: Cultural/regional background for personalised coaching
         onboardingComplete:
           type: boolean
       required:

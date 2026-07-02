@@ -20,6 +20,8 @@ export interface UserProfile {
   habits: string[];
   ambitions: string[];
   motivationStyle: string;
+  /** Cultural/regional background for personalised coaching (e.g. "india", "general") */
+  culturalBackground?: string;
   onboardingComplete: boolean;
   createdAt: string;
   updatedAt: string;
@@ -31,6 +33,8 @@ export interface UserProfileInput {
   habits?: string[];
   ambitions?: string[];
   motivationStyle?: string;
+  /** Cultural/regional background for personalised coaching */
+  culturalBackground?: string;
   onboardingComplete?: boolean;
 }
 

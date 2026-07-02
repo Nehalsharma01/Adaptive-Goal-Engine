@@ -14,6 +14,7 @@ import {
   SendOpenaiMessageBody,
 } from "@workspace/api-zod";
 import { openai } from "@workspace/integrations-openai-ai-server";
+import { buildCulturalSystemPrompt, getCulturalContext } from "../cultural-contexts";
 
 const router: IRouter = Router();
 
@@ -128,31 +129,35 @@ router.post("/openai/conversations/:id/messages", async (req, res): Promise<void
   const [profile] = await db.select().from(userProfileTable).limit(1);
   const goals = await db.select().from(goalsTable).limit(10);
 
+  const culturalCtx = getCulturalContext(profile?.culturalBackground);
+  const culturalSystemPrompt = buildCulturalSystemPrompt(profile?.culturalBackground);
+
   const ONBOARDING_SYSTEM = `You are AdaptGoal AI, an intelligent personal coach conducting an onboarding conversation.
 Your goal is to deeply understand the user through natural conversation — their personality, current habits, ambitions, and what motivates them.
 
-Ask thoughtful questions about:
-1. Who they are and what drives them
+${culturalSystemPrompt}
+
+Ask thoughtful, culturally-aware questions about:
+1. Who they are and what drives them (reference relevant cultural context naturally)
 2. Their current habits (good and ones they want to change)
-3. Their biggest ambitions and dreams
-4. What has held them back in the past
+3. Their biggest ambitions and dreams (acknowledge culturally common goals when relevant)
+4. What has held them back in the past (family pressure, time, resources — validate these)
 5. How they prefer to be motivated (gentle encouragement vs. direct challenge)
 
-After gathering enough context (typically 5-8 exchanges), conclude with:
-"I have a good picture of who you are. Let me set up your personalized goal system."
-
-Then respond with a JSON block in this format (wrapped in <profile> tags):
+After gathering enough context (typically 5-8 exchanges), conclude with a culturally warm sign-off, then respond with a JSON block in this format (wrapped in <profile> tags):
 <profile>
 {
   "name": "their name",
   "personalityTraits": ["trait1", "trait2", "trait3"],
   "habits": ["habit1", "habit2"],
   "ambitions": ["ambition1", "ambition2"],
-  "motivationStyle": "encouraging|challenging|balanced"
+  "motivationStyle": "encouraging|challenging|balanced",
+  "culturalBackground": "${profile?.culturalBackground || "general"}"
 }
 </profile>
 
 Keep your questions conversational and empathetic. One question at a time. Be warm and curious.
+Your coaching style should be: ${culturalCtx.coachingStyle}
 ${profile ? `Note: User already has a profile. This may be an update conversation. Current profile: ${JSON.stringify(profile)}` : ""}
 ${goals.length > 0 ? `User has ${goals.length} existing goals.` : ""}`;
 

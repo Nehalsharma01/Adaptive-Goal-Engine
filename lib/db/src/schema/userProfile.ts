@@ -9,6 +9,7 @@ export const userProfileTable = pgTable("user_profile", {
   habits: jsonb("habits").$type<string[]>().notNull().default([]),
   ambitions: jsonb("ambitions").$type<string[]>().notNull().default([]),
   motivationStyle: text("motivation_style").notNull().default("balanced"),
+  culturalBackground: text("cultural_background").default("general"),
   onboardingComplete: boolean("onboarding_complete").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),

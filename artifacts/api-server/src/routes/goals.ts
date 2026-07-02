@@ -14,6 +14,7 @@ import {
   GetGoalsDashboardResponse,
 } from "@workspace/api-zod";
 import { openai } from "@workspace/integrations-openai-ai-server";
+import { buildCulturalSystemPrompt } from "../cultural-contexts";
 
 const router: IRouter = Router();
 
@@ -200,16 +201,21 @@ router.post("/goals/:id/decompose", async (req, res): Promise<void> => {
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
 
+  const culturalPrompt = buildCulturalSystemPrompt(profile?.culturalBackground);
+
   const systemPrompt = `You are an expert behavioral coach and goal decomposition specialist.
 Your task is to break down a user's goal into 5-8 progressive milestones that build on each other.
 Each milestone should be concrete, actionable, and appropriately challenging.
 Milestones should escalate in difficulty to maintain long-term engagement.
 
+${culturalPrompt}
+
 ${profile ? `User profile: ${profile.name}
 Personality traits: ${profile.personalityTraits?.join(", ") || "not specified"}
 Habits: ${profile.habits?.join(", ") || "not specified"}
 Ambitions: ${profile.ambitions?.join(", ") || "not specified"}
-Motivation style: ${profile.motivationStyle}` : ""}
+Motivation style: ${profile.motivationStyle}
+Cultural background: ${profile.culturalBackground || "general"}` : ""}
 
 Respond ONLY with a JSON array of milestones in this exact format:
 [

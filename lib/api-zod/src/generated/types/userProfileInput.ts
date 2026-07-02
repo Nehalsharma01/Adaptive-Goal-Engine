@@ -12,5 +12,7 @@ export interface UserProfileInput {
   habits?: string[];
   ambitions?: string[];
   motivationStyle?: string;
+  /** Cultural/regional background for personalised coaching */
+  culturalBackground?: string;
   onboardingComplete?: boolean;
 }

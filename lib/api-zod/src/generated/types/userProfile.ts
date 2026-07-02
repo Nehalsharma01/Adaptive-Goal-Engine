@@ -13,6 +13,8 @@ export interface UserProfile {
   habits: string[];
   ambitions: string[];
   motivationStyle: string;
+  /** Cultural/regional background for personalised coaching (e.g. "india", "general") */
+  culturalBackground?: string;
   onboardingComplete: boolean;
   createdAt: Date;
   updatedAt: Date;
