@@ -1,0 +1,2 @@
+- [OpenAI client env var fallback](openai-env-fallback.md) — integrations-openai-ai-server must fall back to OPENAI_API_KEY when AI_INTEGRATIONS_OPENAI_API_KEY is absent
+- [TanStack Query 4xx retry loop](tanstack-4xx-retry.md) — QueryClient must disable retries on 4xx or 404 profile check causes infinite spinner on new user onboarding
