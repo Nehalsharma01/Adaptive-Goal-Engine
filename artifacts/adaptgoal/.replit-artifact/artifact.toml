@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "AdaptGoal AI"
+version = "1.0.0"
+id = "artifacts/adaptgoal"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25589
+
+[services.development]
+run = "pnpm --filter @workspace/adaptgoal run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/adaptgoal", "run", "build" ]
+publicDir = "artifacts/adaptgoal/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25589"
+BASE_PATH = "/"
