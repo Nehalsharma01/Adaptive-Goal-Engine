@@ -22,7 +22,7 @@ export default function Onboarding() {
 
   const [conversationId, setConversationId] = useState<number | null>(null);
   const [messages, setMessages] = useState<Message[]>([
-    { role: "assistant", content: "Hi! I'm AdaptGoal AI. To build a program that works for you, I'd love to get to know you. What are some big things you want to achieve right now?" }
+    { role: "assistant", content: "Okay, I've read 47 self-help books so you don't have to. I'm AdaptGoal AI — your personal coach, minus the $300/hour rate and the unsolicited life advice about cold plunges. Let's figure out what you actually want to accomplish. What's one thing you keep telling yourself you'll \"start on Monday\"?" }
   ]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
