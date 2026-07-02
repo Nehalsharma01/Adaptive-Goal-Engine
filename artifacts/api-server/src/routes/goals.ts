@@ -15,6 +15,7 @@ import {
 } from "@workspace/api-zod";
 import { openai } from "@workspace/integrations-openai-ai-server";
 import { buildCulturalSystemPrompt } from "../cultural-contexts";
+import { buildKnowledgePrompt } from "../knowledge-base/index.js";
 
 const router: IRouter = Router();
 
@@ -202,13 +203,27 @@ router.post("/goals/:id/decompose", async (req, res): Promise<void> => {
   res.setHeader("Connection", "keep-alive");
 
   const culturalPrompt = buildCulturalSystemPrompt(profile?.culturalBackground);
+  const knowledgePrompt = buildKnowledgePrompt(
+    {
+      goals: [goal.title, goal.description ?? ""].filter(Boolean),
+      ambitions: profile?.ambitions ?? [],
+      personalityTraits: profile?.personalityTraits ?? [],
+      habits: profile?.habits ?? [],
+      motivationStyle: profile?.motivationStyle ?? "",
+      culturalBackground: profile?.culturalBackground ?? "general",
+    },
+    goal.title
+  );
 
   const systemPrompt = `You are an expert behavioral coach and goal decomposition specialist.
 Your task is to break down a user's goal into 5-8 progressive milestones that build on each other.
 Each milestone should be concrete, actionable, and appropriately challenging.
 Milestones should escalate in difficulty to maintain long-term engagement.
+Ground your milestone design in evidence-based habit formation and goal-setting research.
 
 ${culturalPrompt}
+
+${knowledgePrompt}
 
 ${profile ? `User profile: ${profile.name}
 Personality traits: ${profile.personalityTraits?.join(", ") || "not specified"}

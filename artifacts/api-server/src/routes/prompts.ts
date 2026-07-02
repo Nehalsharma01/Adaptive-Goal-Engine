@@ -7,6 +7,7 @@ import {
 } from "@workspace/api-zod";
 import { openai } from "@workspace/integrations-openai-ai-server";
 import { buildCulturalSystemPrompt } from "../cultural-contexts";
+import { buildKnowledgePrompt } from "../knowledge-base/index.js";
 
 const router: IRouter = Router();
 
@@ -63,17 +64,28 @@ Ambitions: ${profile.ambitions?.join(", ") || "not specified"}`
       : "No active goals yet";
 
   const culturalPrompt = buildCulturalSystemPrompt(profile?.culturalBackground);
+  const knowledgePrompt = buildKnowledgePrompt({
+    goals: goals.map(g => g.title),
+    ambitions: profile?.ambitions ?? [],
+    personalityTraits: profile?.personalityTraits ?? [],
+    habits: profile?.habits ?? [],
+    motivationStyle: profile?.motivationStyle ?? "",
+    culturalBackground: profile?.culturalBackground ?? "general",
+  });
 
   const systemPrompt = `You are a world-class motivational coach specializing in behavioral psychology and habit formation.
 Write a single, powerful, personalized daily motivational prompt (3-5 sentences) for this user.
 The prompt should:
 - Reference their specific goals and progress
 - Connect to their personality, motivation style, and cultural background
+- Draw on evidence-based psychology and habit research naturally — mention specific findings when they land well
 - Be inspiring without being generic or cliché
 - End with a concrete action for today
 - Feel like it was written specifically for them, not a template
 
-${culturalPrompt}`;
+${culturalPrompt}
+
+${knowledgePrompt}`;
 
   const userPrompt = `${profileContext}
 

@@ -15,6 +15,7 @@ import {
 } from "@workspace/api-zod";
 import { openai } from "@workspace/integrations-openai-ai-server";
 import { buildCulturalSystemPrompt, getCulturalContext } from "../cultural-contexts";
+import { buildKnowledgePrompt } from "../knowledge-base/index.js";
 
 const router: IRouter = Router();
 
@@ -131,11 +132,23 @@ router.post("/openai/conversations/:id/messages", async (req, res): Promise<void
 
   const culturalCtx = getCulturalContext(profile?.culturalBackground);
   const culturalSystemPrompt = buildCulturalSystemPrompt(profile?.culturalBackground);
+  const knowledgePrompt = buildKnowledgePrompt({
+    goals: goals.map(g => g.title),
+    ambitions: profile?.ambitions ?? [],
+    personalityTraits: profile?.personalityTraits ?? [],
+    habits: profile?.habits ?? [],
+    motivationStyle: profile?.motivationStyle ?? "",
+    culturalBackground: profile?.culturalBackground ?? "general",
+  });
 
   const ONBOARDING_SYSTEM = `You are AdaptGoal AI, an intelligent personal coach conducting an onboarding conversation.
 Your goal is to deeply understand the user through natural conversation — their personality, current habits, ambitions, and what motivates them.
 
 ${culturalSystemPrompt}
+
+You have access to a research-backed knowledge base covering personality science, habit formation, goal-setting research, career data, mental health, and wellbeing. Use these insights naturally in your questions and reflections — not as a lecture, but as a knowledgeable friend who happens to know the research.
+
+${knowledgePrompt}
 
 Ask thoughtful, culturally-aware questions about:
 1. Who they are and what drives them (reference relevant cultural context naturally)
